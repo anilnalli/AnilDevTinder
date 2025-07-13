@@ -5,6 +5,9 @@ const app=express();
 app.use("/anil",(req,res)=>{
   res.send("hello wolrd"); 
 })
+app.use("/kumar",(req,res)=>{
+  res.send("second change");
+})
 app.use((req,res)=>{
     res.send("hello wolrd this is the express js code");
 })
