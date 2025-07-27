@@ -1,24 +1,25 @@
-const express =require("express");
+const express = require("express");
+const {AuthAdmin,UserAuth}= require("./middleware/auth")
+const app = express();
 
-const app=express();
 
-app.get('/userabc',(req,res)=>{
-  res.send({name:"anil",age:25})
+app.use("/admin/getallusers",AuthAdmin, (req, res, next) => {
+  res.send("your are getting all users");
 });
 
-app.post("/user",(req,res)=>{
-  res.send("data posted")
-
+app.use("/admin/login", (req, res, next) => {
+  res.send("your logged in");
 });
 
-app.delete("/user",(req,res)=>{
-  res.send("data Deleted")
+app.use("/users/allusers",UserAuth,(req,res)=>{
+  res.send("you get all users data")
+
 });
+app.use("/users/login",(req,res)=>{
+  res.send("you are logged in")
 
+})
 
-
-app.listen(3000,()=>{
-    console.log("server stated successfully on port number 3000 ...")
+app.listen(3000, () => {
+  console.log("server stated successfully on port number 3000 ...");
 });
-
-
