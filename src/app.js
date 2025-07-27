@@ -1,25 +1,33 @@
 const express = require("express");
-const {AuthAdmin,UserAuth}= require("./middleware/auth")
+
+const{connectDB}=require('./config/database');
 const app = express();
-
-
-app.use("/admin/getallusers",AuthAdmin, (req, res, next) => {
-  res.send("your are getting all users");
+const User = require("./models/user");
+connectDB().then(()=>{
+  console.log("DB Connection succssfully established..");
+  app.listen(3000,()=>{
+    console.log("server stated successfully on port number 3000 ...");
+  });
+}).catch((err)=>{
+  console.error("connection not established !!!");
 });
 
-app.use("/admin/login", (req, res, next) => {
-  res.send("your logged in");
-});
 
-app.use("/users/allusers",UserAuth,(req,res)=>{
-  res.send("you get all users data")
-
-});
-app.use("/users/login",(req,res)=>{
-  res.send("you are logged in")
-
+app.use("/signup",async(req,res)=>{
+  const user = new User({
+    firstName: "kumar",
+    lastName: "nalli",
+    email: "nalli@gmail.com",
+    password: "anil123",
+    age: 25,
+    gender:"male"
+  });
+  try {
+    const savedUser = await user.save();
+    res.status(201).send(savedUser);
+  } catch (error) {
+    res.status(400).send("Error saving user: " + error.message);
+    }
 })
 
-app.listen(3000, () => {
-  console.log("server stated successfully on port number 3000 ...");
-});
+
