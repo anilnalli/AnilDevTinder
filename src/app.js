@@ -3,7 +3,9 @@ const { connectDB } = require("./config/database");
 const app = express();
 const User = require("./models/user");
 const { AuthAdmin, UserAuth } = require("./middleware/auth");
-
+const { fieldValidations } = require("./utils/validation");
+const validator=require("validator");
+const bycrpt = require("bcrypt");
 connectDB()
   .then(() => {
     console.log("DB Connection succssfully established..");
@@ -18,14 +20,42 @@ connectDB()
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
   try {
+    fieldValidations(req.body);
+    const { firstName, lastName, email, password } = req.body;
+    const user = new User({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: await bycrpt.hash(password, 10),
+    });
     const savedUser = await user.save();
     res.status(201).send(savedUser);
   } catch (error) {
     res.status(400).send("Error saving user: " + error.message);
   }
 });
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!validator.isEmail(email)) {
+      throw new Error("Invalid email format");
+    }
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const isMatch = await bycrpt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).send("Invalid User");
+    }
+    res.status(200).send("Login successful");
+  } catch (error) {
+    res.status(400).send("Error saving user: " + error.message);
+  }
+});
+
 app.get("/user", UserAuth, async (req, res) => {
   try {
     const users = await User.find();
