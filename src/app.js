@@ -6,6 +6,8 @@ const { AuthAdmin, UserAuth } = require("./middleware/auth");
 const { fieldValidations } = require("./utils/validation");
 const validator=require("validator");
 const bycrpt = require("bcrypt");
+const jwtToken=require("jsonwebtoken");
+const cookieParser=require("cookie-parser");
 connectDB()
   .then(() => {
     console.log("DB Connection succssfully established..");
@@ -18,6 +20,7 @@ connectDB()
   });
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async (req, res) => {
   try {
@@ -50,11 +53,33 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(400).send("Invalid User");
     }
+    const jwttoken=await jwtToken.sign({id:user._id},"DevTinder@Anil@14569");
+    res.cookie("token",jwttoken);
     res.status(200).send("Login successful");
   } catch (error) {
     res.status(400).send("Error saving user: " + error.message);
   }
 });
+app.get("/profile",async(req,res)=>{
+  try{
+    const token =req.cookies.token;
+    if(!token){
+     return res.status(401).send("Unauthorized: No token provided");
+    }
+    const decoded=jwtToken.verify(token,"DevTinder@Anil@14569");
+    const user=await User.findById(decoded.id);
+    if(!user){
+      return res.status(404).send("User not found");
+    }
+    res.status(200).send(user);
+    
+
+  }
+  catch(error){
+    res.status(500).send("Error Fetching profile: "+ error.message);
+
+  }
+})
 
 app.get("/user", UserAuth, async (req, res) => {
   try {
