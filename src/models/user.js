@@ -1,6 +1,7 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
 const jwtToken =require("jsonwebtoken");
+const bcrypt=require("bcrypt")
 const{Schema}=mongoose;
 const userSchema= new Schema({
     firstName:{
