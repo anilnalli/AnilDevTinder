@@ -7,10 +7,7 @@ const bcrypt = require("bcrypt");
 // import validator package from npm
 const validator = require("validator");
 // import the validation function from the utils folder
-const {
-  fieldValidations,
-  isPasswordValidOfForgotPassword,
-} = require("../utils/validation");
+const { fieldValidations} = require("../utils/validation");
 
 authRouter.post("/user/signup", async (req, res) => {
   try {

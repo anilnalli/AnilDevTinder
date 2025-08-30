@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const authRouter=require("./routers/auth");
 //import the prifle router
 const profileROuter=require('./routers/profile');
+const connectionRequestRouter=require("./routers/connectionRequest")
 // connect to the database and start the server
 connectDB()
   .then(() => {
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/",authRouter);
 app.use("/",profileROuter);
+app.use("/",connectionRequestRouter)
 
 
 
