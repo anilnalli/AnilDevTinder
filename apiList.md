@@ -7,4 +7,15 @@
  # ProfileRouter 
 
  GET - /profile/myprofile
-POST -/profile/changeProfile
+POST -/profile/changeProfile 
+
+# connectionRequest 
+
+POST -/connectionRequest/send/:status/:userId 
+
+POST -/connectionRequest/review/:status/requestId
+
+
+# UsersRouter 
+
+GET -/users/connections/pending 

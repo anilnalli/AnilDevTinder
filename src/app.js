@@ -10,7 +10,10 @@ const cookieParser = require("cookie-parser");
 const authRouter=require("./routers/auth");
 //import the prifle router
 const profileROuter=require('./routers/profile');
-const connectionRequestRouter=require("./routers/connectionRequest")
+const connectionRequestRouter=require("./routers/connectionRequest");
+const usersConnectionsRouter=require('./routers/users');
+const cors=require('cors')
+
 // connect to the database and start the server
 connectDB()
   .then(() => {
@@ -27,9 +30,14 @@ connectDB()
 app.use(express.json());
 // middleware to parse the cookies from the request
 app.use(cookieParser());
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials:true
+}))
 app.use("/",authRouter);
 app.use("/",profileROuter);
-app.use("/",connectionRequestRouter)
+app.use("/",connectionRequestRouter);
+app.use("/",usersConnectionsRouter);
 
 
 

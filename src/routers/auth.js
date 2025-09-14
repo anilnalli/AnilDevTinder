@@ -13,11 +13,12 @@ authRouter.post("/user/signup", async (req, res) => {
   try {
     // validate the request body
     fieldValidations(req.body);
-    const { firstName, lastName, email, age, gender, password } = req.body;
+    const { firstName, lastName, email, age, gender, password,imageUrl } = req.body;
     const user = new User({
       firstName: firstName,
       lastName: lastName,
       email: email,
+      imageUrl:imageUrl,
       password: await bcrypt.hash(password, 10),
       gender: gender,
       age: age,
@@ -48,7 +49,7 @@ authRouter.post("/user/login", async (req, res) => {
     const jwttoken = await user.getJWTToken();
     // set the token in the cookie
     res.cookie("token", jwttoken, { expires: new Date(Date.now() + 3600000) });
-    res.status(200).send("Login successful");
+    res.status(200).json({user});
   } catch (error) {
     res.status(400).send("Error saving user: " + error.message);
   }
