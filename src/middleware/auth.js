@@ -6,7 +6,7 @@ const UserAuth = async (req, res, next) => {
     const token = req.cookies.token;
     // if token is not present the trow error
     if (!token) {
-      res.status(400).send("Token is not present");
+     return res.status(401).send("Token is not present");
     }
     //verify the token
     const decodedObj = await jwtToken.verify(token, "DevTinder@Anil@14569");

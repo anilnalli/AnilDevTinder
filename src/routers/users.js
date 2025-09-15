@@ -4,6 +4,8 @@ const UserRouter = express.Router();
 const { UserAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const connectionRequest = require("../models/connectionRequest");
+const { findById } = require("../models/user");
+const user = require("../models/user");
 
 UserRouter.get("/users/connections/recieved", UserAuth, async (req, res) => {
   try {
@@ -47,6 +49,30 @@ UserRouter.get("/users/connections", UserAuth, async (req, res) => {
       data,
     });
   } catch (error) {}
+});
+
+UserRouter.get("/feed", UserAuth, async (req, res) => {
+  try {
+    const page=parseInt(req.query.page)||1;
+    let limit=parseInt(req.query.limit)||10;
+    limit=limit>50?50:limit
+    const skip=(page-1)*limit
+    const loggedInUser = req.user;
+    const connectionRequest = await ConnectionRequest.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+    }).select("fromUserId toUserId");
+    const hindeUserFromFeed=new Set();
+    connectionRequest.forEach((req)=>{
+      hindeUserFromFeed.add(req.fromUserId.toString());
+       hindeUserFromFeed.add(req.toUserId.toString());
+    })
+    const users=await user.find({
+     $and:[{ _id:{$nin:Array.from(hindeUserFromFeed)}},{_id:{$ne:loggedInUser._id}}]
+    }).select("firstName lastName imageUrl gender age").skip(skip).limit(limit)
+    res.json(users);
+  } catch (err) {
+    res.status(400).json({message:err.message})
+  }
 });
 
 module.exports = UserRouter;
