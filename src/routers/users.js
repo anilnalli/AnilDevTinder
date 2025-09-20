@@ -3,8 +3,6 @@ const express = require("express");
 const UserRouter = express.Router();
 const { UserAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
-const connectionRequest = require("../models/connectionRequest");
-const { findById } = require("../models/user");
 const user = require("../models/user");
 
 UserRouter.get("/users/connections/recieved", UserAuth, async (req, res) => {
@@ -13,7 +11,7 @@ UserRouter.get("/users/connections/recieved", UserAuth, async (req, res) => {
     const connectionRequest = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", ["firstName", "lastName"]);
+    }).populate("fromUserId", ["firstName", "lastName","imageUrl"]);
     if (!connectionRequest) {
       return res.status(400).json({ message: "failed to get the data..." });
     }
@@ -34,8 +32,8 @@ UserRouter.get("/users/connections", UserAuth, async (req, res) => {
         { fromUserId: loggedInUser._id, status: "accepted" },
       ],
     })
-      .populate("toUserId", "firstName lastName")
-      .populate("fromUserId", "firstName lastName");
+      .populate("toUserId", "firstName lastName imageUrl age")
+      .populate("fromUserId", "firstName lastName imageUrl age");
     if (!connectionRequest) {
       res.status(404).json({ message: "No connections are found..." });
     }
