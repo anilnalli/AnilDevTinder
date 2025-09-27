@@ -12,7 +12,8 @@ const authRouter=require("./routers/auth");
 const profileROuter=require('./routers/profile');
 const connectionRequestRouter=require("./routers/connectionRequest");
 const usersConnectionsRouter=require('./routers/users');
-const cors=require('cors')
+const cors=require('cors');
+require('dotenv').config()
 
 // connect to the database and start the server
 connectDB()

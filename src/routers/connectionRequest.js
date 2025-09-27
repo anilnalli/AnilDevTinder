@@ -4,7 +4,7 @@ const { UserAuth } = require("../middleware/auth");
 const User = require("../models/user");
 const ConnectionRequest = require("../models/connectionRequest");
 const authRouter = require("./auth");
-
+const{run}=require("../utils/sendEmails")
 connectionRequestRouter.post(
   "/connectionRequest/send/:status/:toUserId",
   UserAuth,
@@ -38,6 +38,9 @@ connectionRequestRouter.post(
         status,
       });
       await connection.save();
+       console.log("emailRes==>",{run})
+      const emailRes=await run();
+      // console.log("emailRes==>",{emailRes})
       return res.status(200).send(" connection request send successfully");
     } catch (error) {
       return res.status(500).send("ERROR: "+error.message);
