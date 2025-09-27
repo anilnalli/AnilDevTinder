@@ -13,14 +13,14 @@ const profileROuter=require('./routers/profile');
 const connectionRequestRouter=require("./routers/connectionRequest");
 const usersConnectionsRouter=require('./routers/users');
 const cors=require('cors');
-require('dotenv').config()
+const env=require('dotenv').config();
 
 // connect to the database and start the server
 connectDB()
   .then(() => {
     console.log("DB Connection succssfully established..");
     // start the server after  the database connection is established
-    app.listen(3000, () => {
+    app.listen(process.env.PORT, () => {
       console.log("server stated successfully on port number 3000 ...");
     });
   })

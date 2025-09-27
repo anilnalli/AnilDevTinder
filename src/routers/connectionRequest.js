@@ -38,9 +38,8 @@ connectionRequestRouter.post(
         status,
       });
       await connection.save();
-       console.log("emailRes==>",{run})
       const emailRes=await run();
-      // console.log("emailRes==>",{emailRes})
+       console.log("emailRes==>",{emailRes})
       return res.status(200).send(" connection request send successfully");
     } catch (error) {
       return res.status(500).send("ERROR: "+error.message);

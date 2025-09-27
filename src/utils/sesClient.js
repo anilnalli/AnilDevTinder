@@ -4,8 +4,8 @@ const { SESClient }= require("@aws-sdk/client-ses");
 const REGION = "us-east-1";
 // Create SES service object.
 const sesClient = new SESClient({ region: REGION,credentials:{
-    accessKeyId:"AKIASCLAWDUOLPIVAMWB",
-    secretAccessKey:"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"
+    accessKeyId:process.env.AWS_ACCESS_KEY,
+    secretAccessKey:process.env.AWS_SES_SECRETE_KEY
 } });
 module.exports= { sesClient };
 // snippet-end:[ses.JavaScript.createclientv3]
