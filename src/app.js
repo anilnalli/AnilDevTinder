@@ -14,6 +14,7 @@ const connectionRequestRouter=require("./routers/connectionRequest");
 const usersConnectionsRouter=require('./routers/users');
 const cors=require('cors');
 const env=require('dotenv').config();
+const cron=require("./utils/cornJob");
 
 // connect to the database and start the server
 connectDB()
